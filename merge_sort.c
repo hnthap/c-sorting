@@ -1,9 +1,30 @@
+/**
+ * @file merge_sort.c
+ * @author HN Thap
+ * @brief Simple implementation of buffer-based merge sort algorithm.
+ * 
+ * The core function is merge_sort(), which depends on
+ * merge_sort_recursive() and merge_sort_merge().
+ * 
+ * The main function not just serves as a usage example, it also support
+ * command line arguments. Just run:
+ * 
+ * merge_sort 4 3 10 2 1
+ * 
+ * in which merge_sort is the executable, 4 is the array size, and 3, 10,
+ * 2, 1 is the 4-element array that need to be sorted.
+ * 
+ * @version 0.1
+ * @date 2025-08-08
+ * @copyright See LICENSE
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 
 void merge_sort(int arr_count, int *arr);
-void split_and_merge(int *arr, int left, int right, int *buffer);
-void merge(int *arr, int left, int middle, int right, int *buffer);
+void merge_sort_recursive(int *arr, int left, int right, int *buffer);
+void merge_sort_merge(int *arr, int left, int middle, int right, int *buffer);
 
 int main(int argc, char *argv[])
 {
@@ -17,8 +38,8 @@ int main(int argc, char *argv[])
     n = atoi(argv[1]);
     if (n <= 0)
     {
-        fprintf(stderr, "Invalid arguments: Array size must be positive.\n");
-        return 1;
+        /* An empty array is sorted by nature. */
+        return 0;
     }
     if (argc != n + 2)
     {
@@ -47,7 +68,12 @@ int main(int argc, char *argv[])
 
 void merge_sort(int arr_count, int *arr)
 {
-    int *buffer = malloc(arr_count * sizeof(int));
+    int *buffer;
+    if (arr == NULL)
+    {
+        fprintf(stderr, "Invalid parameter: arr cannot be NULL.\n");
+    }
+    buffer = malloc(arr_count * sizeof(int));
     if (buffer == NULL)
     {
         fprintf(stderr, "Failed to allocate buffer. Exiting.\n");
@@ -57,12 +83,11 @@ void merge_sort(int arr_count, int *arr)
     {
         return;
     }
-    split_and_merge(arr, 0, arr_count, buffer);
-    
+    merge_sort_recursive(arr, 0, arr_count, buffer);
     free(buffer);
 }
 
-void split_and_merge(int *arr, int left, int right, int *buffer)
+void merge_sort_recursive(int *arr, int left, int right, int *buffer)
 {
     int middle;
     if (right - left <= 1)
@@ -70,12 +95,12 @@ void split_and_merge(int *arr, int left, int right, int *buffer)
         return;
     }
     middle = (left + right) / 2;
-    split_and_merge(arr, left, middle, buffer);
-    split_and_merge(arr, middle, right, buffer);
-    merge(arr, left, middle, right, buffer);
+    merge_sort_recursive(arr, left, middle, buffer);
+    merge_sort_recursive(arr, middle, right, buffer);
+    merge_sort_merge(arr, left, middle, right, buffer);
 }
 
-void merge(int *arr, int left, int middle, int right, int *buffer)
+void merge_sort_merge(int *arr, int left, int middle, int right, int *buffer)
 {
     int i = left;
     int j = middle;
