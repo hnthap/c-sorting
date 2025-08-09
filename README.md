@@ -1,10 +1,11 @@
 # Sorting Algorithms in C
 
-This project implements various **sorting algorithms** in C90 (ANSI C) with a focus on correctness, safety, and simplicity. Currently, it includes:
+This project provides code examples for various **sorting algorithms** in C90 (ANSI C) with a focus on correctness, safety, and simplicity. Currently, it includes:
 
 | File | Algorithm | Description | Recursive | Buffer-based |
 | ---- | --------- | ----------- | --------- | ------------ |
 | [`merge_sort.c`](./merge_sort.c) | Merge Sort | Top-down | Yes | Yes (buffer-based merging) |
+| [`tree_sort.c`](./tree_sort.c) | Tree Sort | Simple BST | Yes | Yes (BST) |
 | [`tree_sort_no_recursion.c`](./tree_sort_no_recursion.c) | Tree Sort | Simple BST | **No** | Yes (BST and stacks) |
 
 
@@ -87,9 +88,11 @@ This will remove the entire `build/` directory, including binaries and object fi
 
 ## 🚀 Planned Features
 
-* [ ] Ensure portability (not just working on Windows)
+* [ ] Ensure portability for Makefile (not just working on Windows)
 * [x] Merge Sort
-* [ ] Tree Sort
+* [x] Tree Sort
+  * [x] Using simple BST
+  * [ ] Using red-black tree
 * [ ] Quicksort
 * [ ] Heap **Sort**
 * [ ] Insertion Sort

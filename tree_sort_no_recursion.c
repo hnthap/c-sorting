@@ -29,7 +29,8 @@
 #define C_SORTING_TREE_SORT_NULL (2)
 
 /**
- * @brief Return code for tree sort that indicates errors involving empty containers.
+ * @brief Return code for tree sort that indicates errors involving empty
+ * containers.
  */
 #define C_SORTING_TREE_SORT_EMPTY (3)
 
@@ -81,35 +82,14 @@ typedef struct BSTStack
  * @param down Pointer to the downward stack node
  * @return BSTStackNode* Pointer to new allocated block
  */
-BSTStackNode *new_bst_stack_node(BSTNode *tree_node, BSTStackNode *down)
-{
-    BSTStackNode *node = malloc(sizeof(BSTStackNode));
-    if (node == NULL)
-    {
-        fprintf(stderr, "Failed to create new BST stack node: failed to allocate.\n");
-        return NULL;
-    }
-    node->tree_node = tree_node;
-    node->down = down;
-    return node;
-}
+BSTStackNode *new_bst_stack_node(BSTNode *tree_node, BSTStackNode *down);
 
 /**
  * @brief Allocate and initialize new empty BST-specific stack.
  * 
  * @return BSTStack* Pointer to new allocated block
  */
-BSTStack *new_bst_stack()
-{
-    BSTStack *stack = malloc(sizeof(BSTStack));
-    if (stack == NULL)
-    {
-        fprintf(stderr, "Failed to create new BST stack: failed to allocate.\n");
-        return NULL;
-    }
-    stack->top = NULL;
-    return stack;
-}
+BSTStack *new_bst_stack();
 
 /**
  * @brief Push new node into a BST-specific stack.
@@ -118,8 +98,170 @@ BSTStack *new_bst_stack()
  * @param tree_node Pointer to the BST node to be stored
  * @return int C_SORTING_TREE_SORT_OK if success,
  * or C_SORTING_TREE_SORT_NULL if the stack pointer is NULL,
- * otherwise, C_SORTING_TREE_SORT_ALLOC_FAILED when failed to allocate new node.
+ * otherwise, C_SORTING_TREE_SORT_ALLOC_FAILED when failed to allocate new
+ * node.
  */
+int push_bst_stack(BSTStack *stack, BSTNode *tree_node);
+
+/**
+ * @brief Pop node from a BST-specific stack.
+ * 
+ * @param stack Pointer to stack
+ * @param node_ref Reference of the pointer to stack
+ * @return int C_SORTING_TREE_SORT_OK if success,
+ * or C_SORTING_TREE_SORT_NULL if the stack pointer is NULL,
+ * otherwise, C_SORTING_TREE_SORT_EMPTY when the stack is empty.
+ */
+int pop_bst_stack(BSTStack *stack, BSTNode **node_ref);
+
+/**
+ * @brief Destroy (including clearing and freeing) a BST-specific stack.
+ * 
+ * @param stack_ref Reference of the pointer to stack
+ * @return int C_SORTING_TREE_SORT_OK if success,
+ * otherwise, C_SORTING_TREE_SORT_NULL when the stack reference is NULL.
+ */
+int destroy_bst_stack(BSTStack **stack_ref);
+
+/**
+ * @brief Allocate and initialize new BST node.
+ * 
+ * @param data Data
+ * @param left Pointer to left child (NULL if not presenting)
+ * @param right Pointer to right child (NULL if not presenting)
+ * @return BSTNode* Pointer to new allocated block
+ */
+BSTNode *new_bst_node(int data, BSTNode *left, BSTNode *right);
+
+/**
+ * @brief Allocate and initialize an empty BST.
+ * 
+ * @return BST* Pointer to new allocated block
+ */
+BST *new_bst();
+
+/**
+ * @brief Push new node to a BST.
+ * 
+ * @param tree Pointer to BST
+ * @param data Data to be stored
+ * @return int C_SORTING_TREE_SORT_OK if success,
+ * otherwise, C_SORTING_TREE_SORT_ALLOC_FAILED when failed to allocate node.
+ */
+int push_bst(BST *tree, int data);
+
+/**
+ * @brief Clear a BST (without destroying it).
+ * 
+ * @param tree Pointer to BST
+ * @return int C_SORTING_TREE_SORT_OK if success,
+ * or C_SORTING_TREE_SORT_NULL if the tree pointer is NULL,
+ * or C_SORTING_TREE_SORT_ALLOC_FAILED if failed to allocate memory,
+ * otherwise, C_SORTING_TREE_SORT_FAILED, which indicates failure from
+ * push_bst_stack().
+ */
+int clear_bst(BST *tree);
+
+/**
+ * @brief Destroy a BST.
+ * 
+ * @param tree_ref Reference of the pointer to BST
+ * @return int C_SORTING_TREE_SORT_OK if success,
+ * or C_SORTING_TREE_SORT_NULL if the BST reference is NULL,
+ * otherwise, C_SORTING_TREE_SORT_FAILED, which indicates failure from
+ * clear_bst().
+ */
+int destroy_bst(BST **tree_ref);
+
+/**
+ * @brief Perform Tree sort on an array in-place.
+ * 
+ * @param arr_count Size of the array
+ * @param arr The array
+ * @return int C_SORTING_TREE_SORT_OK if success,
+ * or C_SORTING_TREE_SORT_ALLOC_FAILED if failed to allocate memory,
+ * otherwise, C_SORTING_TREE_SORT_FAILED, which indicates failure from
+ * push_bst() or push_bst_stack().
+ */
+int tree_sort(int arr_count, int arr[]);
+
+int main(int argc, char *argv[])
+{
+    int i, n;
+    int *a;
+    if (argc == 1)
+    {
+        fprintf(stderr, "Invalid arguments: Array size must be specified.\n");
+        return 1;
+    }
+    n = atoi(argv[1]);
+    if (n <= 0)
+    {
+        /* An empty array is sorted by nature. */
+        return 0;
+    }
+    if (argc != n + 2)
+    {
+        fprintf(
+            stderr,
+            "Invalid arguments: Array was expected to have %d element(s), "
+            "but got %d instead.\n",
+            n,
+            argc - 2
+        );
+        return 1;
+    }
+    a = malloc(n * sizeof(int));
+    if (a == NULL)
+    {
+        fprintf(stderr, "Failed to allocate array. Exiting.\n");
+        return 1;
+    }
+    for (i = 0; i < n; i += 1)
+    {
+        a[i] = atoi(argv[i + 2]);
+    }
+    tree_sort(n, a);
+    for (i = 0; i < n; i += 1)
+    {
+        printf("%d ", a[i]);
+    }
+    printf("\n");
+    free(a);
+    return 0;
+}
+
+BSTStackNode *new_bst_stack_node(BSTNode *tree_node, BSTStackNode *down)
+{
+    BSTStackNode *node = malloc(sizeof(BSTStackNode));
+    if (node == NULL)
+    {
+        fprintf(
+            stderr,
+            "Failed to create new BST stack node: failed to allocate.\n"
+        );
+        return NULL;
+    }
+    node->tree_node = tree_node;
+    node->down = down;
+    return node;
+}
+
+BSTStack *new_bst_stack()
+{
+    BSTStack *stack = malloc(sizeof(BSTStack));
+    if (stack == NULL)
+    {
+        fprintf(
+            stderr,
+            "Failed to create new BST stack: failed to allocate.\n"
+        );
+        return NULL;
+    }
+    stack->top = NULL;
+    return stack;
+}
+
 int push_bst_stack(BSTStack *stack, BSTNode *tree_node)
 {
     BSTStackNode *node;
@@ -131,22 +273,16 @@ int push_bst_stack(BSTStack *stack, BSTNode *tree_node)
     node = new_bst_stack_node(tree_node, stack->top);
     if (node == NULL)
     {
-        fprintf(stderr, "Failed to push to BST stack: failed to allocate new node.\n");
+        fprintf(
+            stderr,
+            "Failed to push to BST stack: failed to allocate new node.\n"
+        );
         return C_SORTING_TREE_SORT_ALLOC_FAILED;
     }
     stack->top = node;
     return C_SORTING_TREE_SORT_OK;
 }
 
-/**
- * @brief Pop node from a BST-specific stack.
- * 
- * @param stack Pointer to stack
- * @param node_ref Reference of the pointer to stack
- * @return int C_SORTING_TREE_SORT_OK if success,
- * or C_SORTING_TREE_SORT_NULL if the stack pointer is NULL,
- * otherwise, C_SORTING_TREE_SORT_EMPTY when the stack is empty.
- */
 int pop_bst_stack(BSTStack *stack, BSTNode **node_ref)
 {
     BSTStackNode *node;
@@ -167,19 +303,15 @@ int pop_bst_stack(BSTStack *stack, BSTNode **node_ref)
     return C_SORTING_TREE_SORT_OK;
 }
 
-/**
- * @brief Destroy (including clearing and freeing) a BST-specific stack.
- * 
- * @param stack_ref Reference of the pointer to stack
- * @return int C_SORTING_TREE_SORT_OK if success,
- * otherwise, C_SORTING_TREE_SORT_NULL when the stack reference is NULL.
- */
 int destroy_bst_stack(BSTStack **stack_ref)
 {
     BSTStackNode *node;
     if (stack_ref == NULL)
     {
-        fprintf(stderr, "Failed to destroy BST stack: stack reference is NULL.\n");
+        fprintf(
+            stderr,
+            "Failed to destroy BST stack: stack reference is NULL.\n"
+        );
         return C_SORTING_TREE_SORT_NULL;
     }
     if (*stack_ref == NULL)
@@ -197,14 +329,6 @@ int destroy_bst_stack(BSTStack **stack_ref)
     return C_SORTING_TREE_SORT_OK;
 }
 
-/**
- * @brief Allocate and initialize new BST node.
- * 
- * @param data Data
- * @param left Pointer to left child (NULL if not presenting)
- * @param right Pointer to right child (NULL if not presenting)
- * @return BSTNode* Pointer to new allocated block
- */
 BSTNode *new_bst_node(int data, BSTNode *left, BSTNode *right)
 {
     BSTNode *node = malloc(sizeof(BSTNode));
@@ -219,11 +343,6 @@ BSTNode *new_bst_node(int data, BSTNode *left, BSTNode *right)
     return node;
 }
 
-/**
- * @brief Allocate and initialize an empty BST.
- * 
- * @return BST* Pointer to new allocated block
- */
 BST *new_bst()
 {
     BST *tree = malloc(sizeof(BST));
@@ -236,25 +355,13 @@ BST *new_bst()
     return tree;
 }
 
-/**
- * @brief Push new node to a BST.
- * 
- * @param tree Pointer to BST
- * @param data Data to be stored
- * @return int C_SORTING_TREE_SORT_OK if success,
- * otherwise, C_SORTING_TREE_SORT_ALLOC_FAILED when failed to allocate node.
- */
 int push_bst(BST *tree, int data)
 {
     BSTNode *parent;
     if (tree->root == NULL)
     {
         tree->root = new_bst_node(data, NULL, NULL);
-        if (tree->root == NULL)
-        {
-            fprintf(stderr, "Failed to push to BST: failed to allocate node.\n");
-            return C_SORTING_TREE_SORT_ALLOC_FAILED;
-        }
+        if (tree->root == NULL) goto cleanup_push_bst_alloc_failed;
         return C_SORTING_TREE_SORT_OK;
     }
     parent = tree->root;
@@ -265,11 +372,7 @@ int push_bst(BST *tree, int data)
             if (parent->left == NULL)
             {
                 parent->left = new_bst_node(data, NULL, NULL);
-                if (parent->left == NULL)
-                {
-                    fprintf(stderr, "Failed to push to BST: failed to allocate node.\n");
-                    return C_SORTING_TREE_SORT_ALLOC_FAILED;
-                }
+                if (parent->left == NULL) goto cleanup_push_bst_alloc_failed;
                 return C_SORTING_TREE_SORT_OK;
             }
             parent = parent->left;
@@ -279,28 +382,17 @@ int push_bst(BST *tree, int data)
             if (parent->right == NULL)
             {
                 parent->right = new_bst_node(data, NULL, NULL);
-                if (parent->right == NULL)
-                {
-                    fprintf(stderr, "Failed to push to BST: failed to allocate node.\n");
-                    return C_SORTING_TREE_SORT_ALLOC_FAILED;
-                }
+                if (parent->right == NULL) goto cleanup_push_bst_alloc_failed;
                 return C_SORTING_TREE_SORT_OK;
             }
             parent = parent->right;
         }
     }
+cleanup_push_bst_alloc_failed:
+    fprintf(stderr, "Failed to push to BST: failed to allocate memory.\n");
+    return C_SORTING_TREE_SORT_ALLOC_FAILED;
 }
 
-/**
- * @brief Clear a BST (without destroying it).
- * 
- * @param tree Pointer to BST
- * @return int C_SORTING_TREE_SORT_OK if success,
- * or C_SORTING_TREE_SORT_NULL if the tree pointer is NULL,
- * or C_SORTING_TREE_SORT_ALLOC_FAILED if failed to allocate memory,
- * otherwise, C_SORTING_TREE_SORT_FAILED, which indicates failure from
- * push_bst_stack().
- */
 int clear_bst(BST *tree)
 {
     BSTStack *s1, *s2;
@@ -336,7 +428,11 @@ int clear_bst(BST *tree)
         (void)pop_bst_stack(s1, &node);
         if (push_bst_stack(s2, node) != C_SORTING_TREE_SORT_OK)
         {
-            fprintf(stderr, "Failed to clear BST: failed to push node to stack s2. Tree might be partially cleared.\n");
+            fprintf(
+                stderr,
+                "Failed to clear BST: failed to push node to stack s2. "
+                "Tree might be partially cleared.\n"
+            );
             rc = C_SORTING_TREE_SORT_FAILED;
             goto cleanup_clear_bst;
         }
@@ -344,7 +440,11 @@ int clear_bst(BST *tree)
         {
             if (push_bst_stack(s1, node->left) != C_SORTING_TREE_SORT_OK)
             {
-                fprintf(stderr, "Failed to clear BST: failed push left child to stack. Memory leak possible.\n");
+                fprintf(
+                    stderr,
+                    "Failed to clear BST: failed push left child to stack. "
+                    "Memory leak possible.\n"
+                );
                 rc = C_SORTING_TREE_SORT_FAILED;
                 goto cleanup_clear_bst;
             }
@@ -353,7 +453,10 @@ int clear_bst(BST *tree)
         {
             if (push_bst_stack(s1, node->right) != C_SORTING_TREE_SORT_OK)
             {
-                fprintf(stderr, "Failed to clear BST: failed push right child to stack.\n");
+                fprintf(
+                    stderr,
+                    "Failed to clear BST: failed push right child to stack.\n"
+                );
                 rc = C_SORTING_TREE_SORT_FAILED;
                 goto cleanup_clear_bst;
             }
@@ -372,15 +475,6 @@ cleanup_clear_bst:
     return rc;
 }
 
-/**
- * @brief Destroy a BST.
- * 
- * @param tree_ref Reference of the pointer to BST
- * @return int C_SORTING_TREE_SORT_OK if success,
- * or C_SORTING_TREE_SORT_NULL if the BST reference is NULL,
- * otherwise, C_SORTING_TREE_SORT_FAILED, which indicates failure from
- * clear_bst().
- */
 int destroy_bst(BST **tree_ref)
 {
     if (tree_ref == NULL)
@@ -402,16 +496,6 @@ int destroy_bst(BST **tree_ref)
     return C_SORTING_TREE_SORT_OK;
 }
 
-/**
- * @brief Perform Tree sort on an array in-place.
- * 
- * @param arr_count Size of the array
- * @param arr The array
- * @return int C_SORTING_TREE_SORT_OK if success,
- * or C_SORTING_TREE_SORT_ALLOC_FAILED if failed to allocate memory,
- * otherwise, C_SORTING_TREE_SORT_FAILED, which indicates failure from
- * push_bst() or push_bst_stack().
- */
 int tree_sort(int arr_count, int arr[])
 {
     BST *tree;
@@ -421,7 +505,10 @@ int tree_sort(int arr_count, int arr[])
     int rc = C_SORTING_TREE_SORT_OK;
     if (arr == NULL)
     {
-        fprintf(stderr, "Tree sort failed: invalid parameter: arr cannot be NULL.\n");
+        fprintf(
+            stderr,
+            "Tree sort failed: invalid parameter: arr cannot be NULL.\n"
+        );
         return C_SORTING_TREE_SORT_NULL;
     }
     if (arr_count < 2) return C_SORTING_TREE_SORT_OK;
@@ -461,7 +548,7 @@ int tree_sort(int arr_count, int arr[])
             }
             current = current->left;
         }
-        (void)pop_bst_stack(stack, &current); /* Fine to ignore error code since the stack is not empty */
+        (void)pop_bst_stack(stack, &current);
         arr[i++] = current->data;
         current = current->right;
     }
@@ -469,48 +556,11 @@ cleanup_tree_sort:
     (void)destroy_bst_stack(&stack);
     if (destroy_bst(&tree) != C_SORTING_TREE_SORT_OK)
     {
-        fprintf(stderr, "Tree sort failed: failed to destroy tree after using.\n");
+        fprintf(
+            stderr,
+            "Tree sort failed: failed to destroy tree after using.\n"
+        );
         return C_SORTING_TREE_SORT_FAILED;
     }
     return rc;
-}
-
-int main(int argc, char *argv[])
-{
-    int i, n;
-    int *a;
-    if (argc == 1)
-    {
-        fprintf(stderr, "Invalid arguments: Array size must be specified.\n");
-        return 1;
-    }
-    n = atoi(argv[1]);
-    if (n <= 0)
-    {
-        /* An empty array is sorted by nature. */
-        return 0;
-    }
-    if (argc != n + 2)
-    {
-        fprintf(stderr, "Invalid arguments: Array elements must be listed in full.\n");
-        return 1;
-    }
-    a = malloc(n * sizeof(int));
-    if (a == NULL)
-    {
-        fprintf(stderr, "Failed to allocate array. Exiting.\n");
-        return 1;
-    }
-    for (i = 0; i < n; i += 1)
-    {
-        a[i] = atoi(argv[i + 2]);
-    }
-    tree_sort(n, a);
-    for (i = 0; i < n; i += 1)
-    {
-        printf("%d ", a[i]);
-    }
-    printf("\n");
-    free(a);
-    return 0;
 }
