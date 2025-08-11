@@ -16,28 +16,28 @@
 /**
  * @brief Return code for tree sort that indicates success.
  */
-#define C_SORTING_TREE_SORT_OK (0)
+#define CDSA_TREE_SORT_OK (0)
 
 /**
  * @brief Return code for tree sort that indicates failure.
  */
-#define C_SORTING_TREE_SORT_FAILED (1)
+#define CDSA_TREE_SORT_FAILED (1)
 
 /**
  * @brief Return code for tree sort that indicates errors involving NULL.
  */
-#define C_SORTING_TREE_SORT_NULL (2)
+#define CDSA_TREE_SORT_NULL (2)
 
 /**
  * @brief Return code for tree sort that indicates errors involving empty
  * containers.
  */
-#define C_SORTING_TREE_SORT_EMPTY (3)
+#define CDSA_TREE_SORT_EMPTY (3)
 
 /**
  * @brief Return code for tree sort that indicates allocation failure.
  */
-#define C_SORTING_TREE_SORT_ALLOC_FAILED (4)
+#define CDSA_TREE_SORT_ALLOC_FAILED (4)
 
 /**
  * @brief Basic structure for a BST node.
@@ -80,8 +80,8 @@ BST *new_bst();
  * 
  * @param tree Pointer to BST
  * @param data Data to be stored
- * @return int C_SORTING_TREE_SORT_OK if success,
- * otherwise, C_SORTING_TREE_SORT_ALLOC_FAILED when failed to allocate node.
+ * @return int CDSA_TREE_SORT_OK if success,
+ * otherwise, CDSA_TREE_SORT_ALLOC_FAILED when failed to allocate node.
  */
 int push_bst(BST *tree, int data);
 
@@ -97,11 +97,8 @@ void clear_bst_recursive(BSTNode *node);
  * @brief Clear a BST (without destroying it).
  * 
  * @param tree Pointer to BST
- * @return int C_SORTING_TREE_SORT_OK if success,
- * or C_SORTING_TREE_SORT_NULL if the tree pointer is NULL,
- * or C_SORTING_TREE_SORT_ALLOC_FAILED if failed to allocate memory,
- * otherwise, C_SORTING_TREE_SORT_FAILED, which indicates failure from
- * push_bst_stack().
+ * @return int CDSA_SIMPLE_BST_OK if success,
+ * otherwise, CDSA_SIMPLE_BST_NULL when the tree pointer is NULL.
  */
 int clear_bst(BST *tree);
 
@@ -109,10 +106,8 @@ int clear_bst(BST *tree);
  * @brief Destroy a BST.
  * 
  * @param tree_ref Reference of the pointer to BST
- * @return int C_SORTING_TREE_SORT_OK if success,
- * or C_SORTING_TREE_SORT_NULL if the BST reference is NULL,
- * otherwise, C_SORTING_TREE_SORT_FAILED, which indicates failure from
- * clear_bst().
+ * @return int CDSA_SIMPLE_BST_OK if success,
+ * otherwise, CDSA_SIMPLE_BST_NULL when the BST reference is NULL.
  */
 int destroy_bst(BST **tree_ref);
 
@@ -131,9 +126,9 @@ void tree_sort_recursive(int arr[], int *index_ref, BSTNode *node);
  * 
  * @param arr_count Size of the array
  * @param arr The array
- * @return int C_SORTING_TREE_SORT_OK if success,
- * or C_SORTING_TREE_SORT_ALLOC_FAILED if failed to allocate memory,
- * otherwise, C_SORTING_TREE_SORT_FAILED, which indicates failure from
+ * @return int CDSA_TREE_SORT_OK if success,
+ * or CDSA_TREE_SORT_ALLOC_FAILED if failed to allocate memory,
+ * otherwise, CDSA_TREE_SORT_FAILED, which indicates failure from
  * push_bst() or push_bst_stack().
  */
 int tree_sort(int arr_count, int arr[]);
@@ -222,9 +217,9 @@ int push_bst(BST *tree, int data)
                 stderr,
                 "Failed to push to BST: failed to allocate memory.\n"
             );
-            return C_SORTING_TREE_SORT_ALLOC_FAILED;
+            return CDSA_TREE_SORT_ALLOC_FAILED;
         }
-        return C_SORTING_TREE_SORT_OK;
+        return CDSA_TREE_SORT_OK;
     }
     parent = tree->root;
     while (1) /* Loop termination is warranteed. */
@@ -240,9 +235,9 @@ int push_bst(BST *tree, int data)
                         stderr,
                         "Failed to push to BST: failed to allocate memory.\n"
                     );
-                    return C_SORTING_TREE_SORT_ALLOC_FAILED;
+                    return CDSA_TREE_SORT_ALLOC_FAILED;
                 }
-                return C_SORTING_TREE_SORT_OK;
+                return CDSA_TREE_SORT_OK;
             }
             parent = parent->left;
         }
@@ -257,9 +252,9 @@ int push_bst(BST *tree, int data)
                         stderr,
                         "Failed to push to BST: failed to allocate memory.\n"
                     );
-                    return C_SORTING_TREE_SORT_ALLOC_FAILED;
+                    return CDSA_TREE_SORT_ALLOC_FAILED;
                 }
-                return C_SORTING_TREE_SORT_OK;
+                return CDSA_TREE_SORT_OK;
             }
             parent = parent->right;
         }
@@ -281,11 +276,11 @@ int clear_bst(BST *tree)
     if (tree == NULL)
     {
         fprintf(stderr, "Failed to clear BST: tree is NULL.\n");
-        return C_SORTING_TREE_SORT_NULL;
+        return CDSA_TREE_SORT_NULL;
     }
     clear_bst_recursive(tree->root);
     tree->root = NULL;
-    return C_SORTING_TREE_SORT_OK;
+    return CDSA_TREE_SORT_OK;
 }
 
 int destroy_bst(BST **tree_ref)
@@ -293,11 +288,11 @@ int destroy_bst(BST **tree_ref)
     if (tree_ref == NULL)
     {
         fprintf(stderr, "Failed to destroy BST: tree reference is NULL.\n");
-        return C_SORTING_TREE_SORT_NULL;
+        return CDSA_TREE_SORT_NULL;
     }
     if (*tree_ref == NULL)
     {
-        return C_SORTING_TREE_SORT_OK;
+        return CDSA_TREE_SORT_OK;
     }
     /*
      * As per current implementation of clear_bst(),
@@ -306,7 +301,7 @@ int destroy_bst(BST **tree_ref)
     (void)clear_bst(*tree_ref);
     free(*tree_ref);
     *tree_ref = NULL;
-    return C_SORTING_TREE_SORT_OK;
+    return CDSA_TREE_SORT_OK;
 }
 
 void tree_sort_recursive(int arr[], int *index_ref, BSTNode *node)
@@ -321,41 +316,41 @@ int tree_sort(int arr_count, int arr[])
 {
     BST *tree;
     int i;
-    int rc = C_SORTING_TREE_SORT_OK;
+    int rc = CDSA_TREE_SORT_OK;
     if (arr == NULL)
     {
         fprintf(
             stderr,
             "Tree sort failed: invalid parameter: arr cannot be NULL.\n"
         );
-        return C_SORTING_TREE_SORT_NULL;
+        return CDSA_TREE_SORT_NULL;
     }
-    if (arr_count < 2) return C_SORTING_TREE_SORT_OK;
+    if (arr_count < 2) return CDSA_TREE_SORT_OK;
     tree = new_bst();
     if (tree == NULL)
     {
         fprintf(stderr, "Tree sort failed: failed to allocate tree.\n");
-        return C_SORTING_TREE_SORT_ALLOC_FAILED;
+        return CDSA_TREE_SORT_ALLOC_FAILED;
     }
     for (i = 0; i < arr_count; i++)
     {
-        if (push_bst(tree, arr[i]) != C_SORTING_TREE_SORT_OK)
+        if (push_bst(tree, arr[i]) != CDSA_TREE_SORT_OK)
         {
             fprintf(stderr, "Tree sort failed: failed to push to tree.\n");
-            rc = C_SORTING_TREE_SORT_FAILED;
+            rc = CDSA_TREE_SORT_FAILED;
             goto cleanup_tree_sort;
         }
     }
     i = 0;
     tree_sort_recursive(arr, &i, tree->root);
 cleanup_tree_sort:
-    if (destroy_bst(&tree) != C_SORTING_TREE_SORT_OK)
+    if (destroy_bst(&tree) != CDSA_TREE_SORT_OK)
     {
         fprintf(
             stderr,
             "Tree sort failed: failed to destroy tree after using.\n"
         );
-        return C_SORTING_TREE_SORT_FAILED;
+        return CDSA_TREE_SORT_FAILED;
     }
     return rc;
 }

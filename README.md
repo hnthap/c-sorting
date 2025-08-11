@@ -1,6 +1,19 @@
-# Sorting Algorithms in C
+# Data Structures and Algorithms in C
 
-This project provides code examples for various **sorting algorithms** in C90 (ANSI C) with a focus on correctness, safety, and simplicity. Currently, it includes:
+> ⚠️ This project is under development!
+
+This project provides code examples for various **data structures and algorithms** in C90 (ANSI C) with a focus on correctness, safety, and simplicity.
+
+## 🧪 List
+
+### 🧩 Data Structures
+
+| File | Data Structure | Description |
+| ---- | -------------- | ----------- |
+| [`simple_bst.c`](./simple_bst.c) | Binary Searcy Tree (BST) | Basic, unbalanced tree |
+| [`avl_tree.c`](./avl_tree.c) | AVL Tree | Search and Delete operations are unimplemented |
+
+### 🥜 Sorting Algorithms
 
 | File | Algorithm | Description | Recursive | Buffer-based |
 | ---- | --------- | ----------- | --------- | ------------ |
@@ -8,28 +21,16 @@ This project provides code examples for various **sorting algorithms** in C90 (A
 | [`tree_sort.c`](./tree_sort.c) | Tree Sort | Simple BST | Yes | Yes (BST) |
 | [`tree_sort_no_recursion.c`](./tree_sort_no_recursion.c) | Tree Sort | Simple BST | **No** | Yes (BST and stacks) |
 
-
-Additional algorithms will be added in separate source files, each independently buildable and runnable via `make`.
-
-**TABLE OF CONTENTS**
-
-- [Sorting Algorithms in C](#sorting-algorithms-in-c)
-  - [📑 Usage](#-usage)
-  - [👟 If you need it to run now...](#-if-you-need-it-to-run-now)
-    - [📦 Installation (on Windows)](#-installation-on-windows)
-    - [🛠️ Building](#️-building)
-    - [▶️ Running](#️-running)
-    - [🧹 Cleaning](#-cleaning)
-  - [🚀 Planned Features](#-planned-features)
-  - [📋 License](#-license)
-
 ## 📑 Usage
 
 Just copy the code into existing code bases and refactor it a bit to fit your preferences. The code is short and doing that should be easy for any programmers.
 
 The sorted element type is `int` in the examples, but those can easily be used for any comparable types.
 
-## 👟 If you need it to run now...
+## 👟 Build Guide
+
+<details>
+<summary>🪟 Windows</summary>
 
 In case you need something to run out-of-the-box, you can follow the instruction in this section. 
 
@@ -85,6 +86,7 @@ make clean
 ```
 
 This will remove the entire `build/` directory, including binaries and object files.
+</details>
 
 ## 🚀 Planned Features
 
